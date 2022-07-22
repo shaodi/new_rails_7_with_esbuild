@@ -36,3 +36,7 @@
 /node_modules/**/*
 /vendor/**/*
 /**/.keep
+
+
+# Ignore all idea files
+/.idea/**/*

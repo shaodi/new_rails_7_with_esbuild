@@ -4,7 +4,7 @@
 
 `rbenv install 3.1.2`
 
-## アプリ用のフォルダの作成
+## アプリ用のフォルダを作成
 
 ```shell
 mkdir new_rails_7_with_esbuild
@@ -14,9 +14,10 @@ ruby -v
 ```
 
 ## foremanのインストール
-必須ではなく、`bin/dev`叩くときに、Railsは自動的にインストールしてくれる。
 
-`gem instlal foreman`
+必須ではなく、`bin/dev` 叩くときに、Railsは自動的にインストールしてくれる。
+
+`gem install foreman`
 
 ## bundle init
 
@@ -40,104 +41,106 @@ bundle exec rails new . \
 
 ## Database作成
 
-### 適宜に`config/database.yml`ファイルを調整し、DBに接続できるようにしておく
+1. 適宜に `config/database.yml` ファイルを調整し、DBに接続できるようにしておく
 
-- username
-- password
-- host
+   - username
+   - password
+   - host
 
-### DB作成
+1. DB作成
 
-```shell
-bundle exec rake db:create
-```
+    ```shell
+    bundle exec rake db:create
+    ```
 
-### 検証用のダミーモデルの作成
+1. 検証用のダミーモデルの作成
 
-```shell
-bundle exec rails  g scaffold Twitter title:string content:text
-bundle exec rake db:migrate
-```
+    ```shell
+    bundle exec rails  g scaffold Twitter title:string content:text
+    bundle exec rake db:migrate
+    ```
 
-## jquery入れる
+## [jQuery](https://yarnpkg.com/package/jquery) 入れる
 
-`yarn add jquery`
+1. `yarn add jquery`
 
-`app/javascript/jquery`の配下に、下記のようにファイル群を構成しておく
+1. `app/javascript/jquery`の配下に、下記のようにファイル群を構成しておく
 
-```shell
-app/javascript
-├── jquery
-│   ├── index.js
-│   └── publish_jquery.js
-```
+    ```plaintext
+    app/javascript
+    ├── jquery
+    │   ├── index.js
+    │   └── publish_jquery.js
+    ```
 
-### `app/javascript/index.js`
+1. [`app/javascript/jquery/index.js`](./app/javascript/jquery/index.js)
 
-```javascript
-import './publish_jquery';
-```
+    ```javascript
+    import './publish_jquery';
+    ```
 
-### `app/javascript/publish_jquery.js`
+1. [`app/javascript/jquery/publish_jquery.js`](./app/javascript/jquery/publish_jquery.js)
 
-```javascript
-import jquery from 'jquery';
-window.jQuery = jquery;
-window.$ = jquery;
-```
+    ```javascript
+    import jquery from 'jquery';
+    window.jQuery = jquery;
+    window.$ = jquery;
+    ```
 
-### `app/javascript/application.js`に、いれておく
+1. [`app/javascript/application.js`](./app/javascript/application.js) に、下記をいれておく
 
-```javascript
-// jQuery
-import './jquery';
-```
+    ```javascript
+    // jQuery
+    import './jquery';
+    ```
 
-## bootstrap入れる
+## [Bootstrap](https://yarnpkg.com/package/bootstrap) 入れる
 
 new railsの際に、すでにCSSフレームワークとして指定しているため、追加不要。
 
-```shell
-app/javascript
-├── bootstrap
-│   ├── enable_tooltip_everywhere.js
-│   ├── index.js
-│   └── publish_bootstrap.js
-```
+1. フォルダ構成を下記のようにしておく
 
-### `app/javascript/bootstrap/publish_bootstrap.js`
+    ```plaintext
+    app/javascript
+    ├── bootstrap
+    │   ├── enable_tooltip_everywhere.js
+    │   ├── index.js
+    │   └── publish_bootstrap.js
+    ```
 
-```javascript
-import * as bootstrap from 'bootstrap';
-window.bootstrap = bootstrap;
-```
+1. [`app/javascript/bootstrap/publish_bootstrap.js`](./app/javascript/bootstrap/publish_bootstrap.js)
 
-### `app/javascript/bootstrap/enable_tooltip_everywhere.js`
+    ```javascript
+    import * as bootstrap from 'bootstrap';
+    window.bootstrap = bootstrap;
+    ```
 
-```javascript
-// https://getbootstrap.jp/docs/5.0/components/tooltips/#example-enable-tooltips-everywhere
-document.addEventListener('turbo:load', function() {
-  const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-  tooltipTriggerList.map(function(tooltipTriggerEl) {
-    return new bootstrap.Tooltip(tooltipTriggerEl);
-  });
-});
-```
+1. [`app/javascript/bootstrap/enable_tooltip_everywhere.js`](./app/javascript/bootstrap/enable_tooltip_everywhere.js)
 
-### `app/javascript/bootstrap/index.js`
+    ```javascript
+    // https://getbootstrap.jp/docs/5.0/components/tooltips/#example-enable-tooltips-everywhere
+    document.addEventListener('turbo:load', function() {
+      const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+      tooltipTriggerList.map(function(tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+      });
+    });
+    ```
 
-```javascript
-import './publish_bootstrap';
+1. [`app/javascript/bootstrap/index.js`](./app/javascript/bootstrap/index.js)
 
-import './enable_tooltip_everywhere';
-```
+    ```javascript
+    import './publish_bootstrap';
 
-### `app/javascript/application.js`に追加しておく
+    import './enable_tooltip_everywhere';
+    ```
 
-```javascript
-// bootstrap
-import './bootstrap';
-```
+1. `app/javascript/application.js`に追加しておく
+
+    ```javascript
+    // bootstrap
+    import './bootstrap';
+    ```
 
 ## sass確認
 
@@ -203,39 +206,39 @@ app/assets/stylesheets
 
 ESLint中でTypescriptの規約チェックをするため、追加しておく。
 
-`yarn add -D typescript`
+1. `yarn add -D typescript`
 
-```shell
-app/javascript
-└── project
-    ├── index.js
-    └── twitter.ts
-```
+    ```shell
+    app/javascript
+    └── project
+        ├── index.js
+        └── twitter.ts
+    ```
 
-### `app/javascript/project/index.js`
+1. [`app/javascript/project/index.js`](./app/javascript/project/index.js)
 
-```javascript
-import './twitter';
-```
+    ```javascript
+    import './twitter';
+    ```
 
-### `app/javascript/project/twitter.ts`
+1. [`app/javascript/project/twitter.ts`](./app/javascript/project/twitter.ts)
 
-```typescript
-function sayHello(name: string): void {
-  console.log(`Hello, ${name}. Current datetime is ${new Date()}`);
-}
+    ```typescript
+    function sayHello(name: string): void {
+      console.log(`Hello, ${name}. Current datetime is ${new Date()}`);
+    }
 
-document.addEventListener('turbo:load', function() {
-  sayHello('TypeScript');
-});
-```
+    document.addEventListener('turbo:load', function() {
+      sayHello('TypeScript');
+    });
+    ```
 
-### `app/javascript/application.js`
+1. [`app/javascript/application.js`](./app/javascript/application.js)
 
-```javascript
-// js for each screens
-import './project';
-```
+    ```javascript
+    // js for each screens
+    import './project';
+    ```
 
 ## ESLint設定
 
@@ -244,7 +247,7 @@ yarn add -D eslint esbuild-plugin-eslinter
 yarn eslint --init
 ```
 
-出来上がった`eslintrc.json`ファイルを調整
+出来上がった[`.eslintrc.json`](./.eslintrc.json)ファイルを調整
 
 ```json
 {
@@ -280,14 +283,15 @@ yarn eslint --init
 }
 ```
 
-eslintスクリプトを、`package.json`に追加
+eslintスクリプトを、[`package.json`](./package.json)に追加
 
 ```json
-    "eslint": "eslint --ext .ts,.js ./app/javascript",
-    "eslint:fix": "eslint --fix --ext .ts,.js ./app/javascript"
+"eslint": "eslint --ext .ts,.js ./app/javascript",
+"eslint:fix": "eslint --fix --ext .ts,.js ./app/javascript"
 ```
 
 これで、下記のコマンドは使えるようになる
+
 - `yarn eslint`
 - `yarn eslint:fix`
 
@@ -295,38 +299,66 @@ eslintスクリプトを、`package.json`に追加
 
 1. プラグインの追加
 
-```shell
-yarn add -D stylelint stylelint-config-standard \
-stylelint-config-prettier \
-stylelint-config-standard-scss \
-stylelint-config-recommended-scss \
-stylelint-config-recess-order \
-stylelint-config-recommended \
-stylelint-config-property-sort-order-smacss
-```
+    ```shell
+    yarn add -D stylelint stylelint-config-standard \
+    stylelint-config-prettier \
+    stylelint-config-standard-scss \
+    stylelint-config-recommended-scss \
+    stylelint-config-recess-order \
+    stylelint-config-recommended \
+    stylelint-config-property-sort-order-smacss
+    ```
 
-1. touch `.stylelintrc.json`
+1. touch [`.stylelintrc.json`](./.stylelintrc.json)
 
-```json
-{
-  "extends": [
-    "stylelint-config-standard",
-    "stylelint-config-prettier",
-    "stylelint-config-standard-scss",
-    "stylelint-config-recess-order",
-    "stylelint-config-recommended",
-    "stylelint-config-recommended-scss",
-    "stylelint-config-property-sort-order-smacss"
-  ]
-}
-```
+    ```json
+    {
+      "extends": [
+        "stylelint-config-standard",
+        "stylelint-config-prettier",
+        "stylelint-config-standard-scss",
+        "stylelint-config-recess-order",
+        "stylelint-config-recommended",
+        "stylelint-config-recommended-scss",
+        "stylelint-config-property-sort-order-smacss"
+      ]
+    }
+    ```
 
-1. ヘルパースクリプトを`package.json`に追加
+1. ヘルパースクリプトを[`package.json`](./package.json)に追加
 
-```json
+    ```json
     "stylelint": "stylelint 'app/assets/stylesheets/**/*.{css,scss}'",
     "stylelint:fix": "stylelint --fix 'app/assets/stylesheets/**/*.{css,scss}'"
-```
+    ```
+
+## esbuild設定の切り出し
+
+1. 今後esubildの設定は調整するかもしれませんので、[`esbuild.config.js`](./esbuild.config.js)ファイルを作成していく
+
+    ```javascript
+    #!/usr/bin/env node
+
+    const path = require('path');
+
+    // "build": "esbuild app/javascript/*.* --bundle --sourcemap --outdir=app/assets/builds --public-path=assets",
+    require('esbuild').build({
+      entryPoints: ['application.js'],
+      bundle: true,
+      sourcemap: true,
+      outdir: path.join(process.cwd(), 'app/assets/builds'),
+      absWorkingDir: path.join(process.cwd(), 'app/javascript'),
+      watch: true,
+      // custom plugins will be inserted is this array
+      plugins: [],
+    }).catch(() => process.exit(1));
+    ```
+
+1. `package.json` ファイルを調整
+
+    ```json
+    "build:js": "node esbuild.config.js",
+    ```
 
 ## Hot module reload機能の追加
 
@@ -411,7 +443,7 @@ stylelint-config-property-sort-order-smacss
     }
     ```
 
-1. ローカルビルド用のヘルパースクリプトを`package.json`に追加
+1. ローカルビルド用のヘルパースクリプトを[`package.json`](./package.json)に追加
 
     ```json
     "build:js:dev": "node esbuild-dev.config.js",
@@ -419,7 +451,7 @@ stylelint-config-property-sort-order-smacss
 
 1. Foreman設定ファイル([`./Procfile.dev`](./Procfile.dev))を調整
 
-    ```json
+    ```plaintext
     web: bin/rails server -p 3000
     # js: yarn build:js --watch
     js: yarn build:js:dev --watch
@@ -430,9 +462,9 @@ stylelint-config-property-sort-order-smacss
 
 これで構築は完了。
 `bin/dev`を起動すれば、開発できるようになります。
-ファイル変更があった際に、画面のリロードも自動的に行われる。
+ファイル変更があったとき、画面のリロードも自動的に行われる。
 
-## その他
+## 開発の際
 
 - `bin/dev`起動
 - Stimulusコントローラー追加や削除の際に、マニフェストの更新を忘れず
@@ -445,10 +477,9 @@ stylelint-config-property-sort-order-smacss
 - フォルダ中のCSSフィアルをまとめてインポートできるプラグインを導入
 - Stimulus controllerをまとめてインポートできるプラグインを導入
 
-## NOT DO
+## Will NOT
 
-- Webpackのような、CSS/JSコンパイル時エラーが発生したときのアプリケーションが動かなくなる仕組みを導入しない
+- Webpackのような、CSS/JSコンパイルエラーが発生したときのアプリケーションが動かなくなる仕組みを導入しない
   - Lintファイル設定したため、エディターが警告を表示してくれる
   - CIで規約チェックしている
   - 開発に邪魔になる
-

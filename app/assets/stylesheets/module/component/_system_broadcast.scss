@@ -1,0 +1,12 @@
+.k-system-broadcast {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border: 1px solid red;
+
+  & > * {
+    margin: 0;
+  }
+}

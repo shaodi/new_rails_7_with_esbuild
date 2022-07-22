@@ -1,0 +1,6 @@
+.k-required {
+  &::after {
+    content: "*";
+    color: red;
+  }
+}

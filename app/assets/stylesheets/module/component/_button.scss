@@ -1,0 +1,12 @@
+.k-btn {
+  display: inline-block;
+  margin: 0.25rem 0;
+  padding: 10px 20px;
+  border: none !important;
+  border-radius: 10px;
+
+  &-primary {
+    background-color: #fe4d12;
+    color: white !important;
+  }
+}

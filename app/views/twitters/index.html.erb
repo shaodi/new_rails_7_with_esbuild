@@ -1,0 +1,79 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Twitters</h1>
+
+<table id="twitters" class="table">
+  <thead>
+    <th><%= Twitter.human_attribute_name :id %></th>
+    <th><%= Twitter.human_attribute_name :title %></th>
+    <th><%= Twitter.human_attribute_name :content %></th>
+    <th><%= Twitter.human_attribute_name :created_at %></th>
+    <th><%= Twitter.human_attribute_name :updated %></th>
+  </thead>
+  <% @twitters.each do |twitter| %>
+    <tr>
+      <td><%= twitter.id %></td>
+      <td><%= twitter.title %></td>
+      <td><%= twitter.content %></td>
+      <td><%= twitter.created_at %></td>
+      <td><%= twitter.updated_at %></td>
+      <td>
+        <%= link_to "Show this twitter", twitter %>
+      </td>
+    </tr>
+  <% end %>
+</table>
+
+<%= link_to "New twitter", new_twitter_path %>
+
+<hr>
+
+<p>
+  <strong>All we have a strong and big red heart!</strong>
+  <em class="fa-solid fa-heart" style="color: red;"></em>
+  <em class="fa-solid fa-heart fa-lg" style="color: red;"></em>
+  <em class="fa-solid fa-heart fa-2x" style="color: red;"></em>
+  <em class="fa-solid fa-heart fa-4x" style="color: red;"></em>
+</p>
+
+<div class="k-system-broadcast">
+  <em class="fa-solid fa-triangle-exclamation"></em>
+  <div>This is a message from system!</div>
+</div>
+
+<hr>
+<div class="alert alert-primary d-flex justify-content-center align-items-center" role="alert">
+  <em class="fa-solid fa-triangle-exclamation"></em>
+  <div>Bootstrap style message pannel</div>
+</div>
+
+<hr>
+<button class="k-btn k-btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Clik to add me!">
+  KnowMe <em class="fa-solid fa-plus"></em>
+</button>
+
+<hr>
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  Launch bootstrap demo modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        hi, this is a modal message from bootstrap!
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,35 @@
+<%= form_with(model: twitter) do |form| %>
+  <% if twitter.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(twitter.errors.count, "error") %> prohibited this twitter from being saved:</h2>
+
+      <ul>
+        <% twitter.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div data-controller="word-count">
+    <%= form.label :title, class: "form-label k-required" %>
+    <%= form.text_field :title,
+        class: "form-control", maxlength: 40, autocomplete: 'off',
+        data: { word_count_target: "input" } %>
+    <span data-word-count-target="message" data-message-format="{count} words remain!"></span>
+  </div>
+
+  <div>
+    <%= form.label :content, class: "form-label k-required" %>
+    <%= form.text_area :content, class: "form-control" %>
+  </div>
+
+  <div class="twitter-form__agreement">
+    <input type="checkbox" id="agreement">
+    <label for="agreement">I agree the policy</label>
+  </div>
+
+  <div>
+    <%= form.submit :Submit, class: "btn btn-primary" %>
+  </div>
+<% end %>

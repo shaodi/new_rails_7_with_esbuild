@@ -1,12 +1,12 @@
-# How to New rails 7 with ESBuild and bootstrap
+# New rails 7 with ESBuild
 
 [ENGLISH](./README.md) | [日本語](./README.ja.md)
 
-## Install ruby3.1.2 with rbenv
+## ruby3.1.2のインストール
 
 `rbenv install 3.1.2`
 
-## Create application source folder
+## アプリ用のフォルダを作成
 
 ```shell
 mkdir new_rails_7_with_esbuild
@@ -15,22 +15,22 @@ echo 3.1.2 > ./.ruby-version
 ruby -v
 ```
 
-## Install foreman
+## foremanのインストール
 
-This is not required, Rails will install foreman automatically for us when run `bin/dev`.
+必須ではなく、`bin/dev` 叩くときに、Railsは自動的にインストールしてくれる。
 
 `gem install foreman`
 
-## Bundle init
+## bundle init
 
 ```shell
 bundle init
 vim Gemfile
-# enable rails gem
+# rails gemを有効にする
 bundle install
 ```
 
-## New rails
+## new rails
 
 ```shell
 bundle exec rails new . \
@@ -41,30 +41,28 @@ bundle exec rails new . \
 --force
 ```
 
-## Create MySQL database
+## Database作成
 
-1. Adjust username/password/host settings in `config/database.yml`
+1. 適宜に `config/database.yml` ファイルを調整し、DBに接続できるようにしておく
 
    - username
    - password
    - host
 
-2. Create database
+1. DB作成
 
     ```shell
     bundle exec rake db:create
     ```
 
-3. Creating dummy models for test
+1. 検証用のダミーモデルの作成
 
     ```shell
     bundle exec rails  g scaffold Twitter title:string content:text
     bundle exec rake db:migrate
     ```
 
-## Add [jQuery](https://yarnpkg.com/package/jquery)
-
-Pleas skip this step, if you do not use jQuery in your project
+## [jQuery](https://yarnpkg.com/package/jquery) 入れる
 
 1. `yarn add jquery`
 
@@ -91,18 +89,18 @@ Pleas skip this step, if you do not use jQuery in your project
     window.$ = jquery;
     ```
 
-1. Add following code to [`app/javascript/application.js`](./app/javascript/application.js)
+1. [`app/javascript/application.js`](./app/javascript/application.js) に、下記をいれておく
 
     ```javascript
     // jQuery
     import './jquery';
     ```
 
-## Add [Bootstrap](https://yarnpkg.com/package/bootstrap)
+## [Bootstrap](https://yarnpkg.com/package/bootstrap) 入れる
 
-No need to add it to package.json manually since it has already been added as a CSS framework in new rails.
+new railsの際に、すでにCSSフレームワークとして指定しているため、追加不要。
 
-1. Create folders as following
+1. フォルダ構成を下記のようにしておく
 
     ```plaintext
     app/javascript
@@ -112,14 +110,14 @@ No need to add it to package.json manually since it has already been added as a 
     │   └── publish_bootstrap.js
     ```
 
-2. [`app/javascript/bootstrap/publish_bootstrap.js`](./app/javascript/bootstrap/publish_bootstrap.js)
+1. [`app/javascript/bootstrap/publish_bootstrap.js`](./app/javascript/bootstrap/publish_bootstrap.js)
 
     ```javascript
     import * as bootstrap from 'bootstrap';
     window.bootstrap = bootstrap;
     ```
 
-3. [`app/javascript/bootstrap/enable_tooltip_everywhere.js`](./app/javascript/bootstrap/enable_tooltip_everywhere.js)
+1. [`app/javascript/bootstrap/enable_tooltip_everywhere.js`](./app/javascript/bootstrap/enable_tooltip_everywhere.js)
 
     ```javascript
     // https://getbootstrap.jp/docs/5.0/components/tooltips/#example-enable-tooltips-everywhere
@@ -131,7 +129,7 @@ No need to add it to package.json manually since it has already been added as a 
     });
     ```
 
-4. [`app/javascript/bootstrap/index.js`](./app/javascript/bootstrap/index.js)
+1. [`app/javascript/bootstrap/index.js`](./app/javascript/bootstrap/index.js)
 
     ```javascript
     import './publish_bootstrap';
@@ -139,26 +137,26 @@ No need to add it to package.json manually since it has already been added as a 
     import './enable_tooltip_everywhere';
     ```
 
-5. Add following code to  `app/javascript/application.js`
+1. `app/javascript/application.js`に追加しておく
 
     ```javascript
     // bootstrap
     import './bootstrap';
     ```
 
-## Confirm sass whether work well
+## sass確認
 
-### Add fontawesome
+### Fontawesome追加
 
-Since we're at it, let's add [fontawesome](https://fontawesome.com/)
+せっかくなので、[fontawesome](https://fontawesome.com/) もいれましょう
 
 ```shell
 yarn add @fortawesome/fontawesome-free
 ```
 
-### Adjust `app/javascript/application.js`
+### app/javascript/application.js 調整
 
-add following codes.
+下記を追加
 
 ```javascript
 // Font Awesome
@@ -168,12 +166,16 @@ import '@fortawesome/fontawesome-free/js/regular';
 import '@fortawesome/fontawesome-free/js/brands';
 ```
 
-### Prepare stylesheet folders as following
+### stylesheetフォルダを構成
+
+**下記のような構成にしておく**
 
 - app/assets/stylesheets/
   - component
-    - module -> This folder is used to store common parts.
-    - project -> This folder is used to store pars for each screens.
+    - module 共通部品
+    - project 画面特有のもの
+
+**今回テストするために、下記のテストファイルを作成します**
 
 ```shell
 tree app/assets/stylesheets
@@ -189,7 +191,7 @@ app/assets/stylesheets
         └── twitter.scss
 ```
 
-Add these files to `app/assets/stylesheets/application.bootstrap.scss` as following.
+**追加したファイルを、`app/assets/stylesheets/application.bootstrap.scss`に追加しておく**
 
 ```scss
 @import "./module/component/button";
@@ -198,13 +200,13 @@ Add these files to `app/assets/stylesheets/application.bootstrap.scss` as follow
 @import "./module/project/twitter";
 ```
 
-Add some test html codes to `app/views/twitters/index.html.erb`.
+`app/views/twitters/index.html.erb`を開いて、適宜にテストコードを入れる
 
-Please check [here](./app/views/twitters/index.html.erb) for details.
+詳細は、[ここ](./app/views/twitters/index.html.erb)。
 
 ## Typescript
 
-We want to use Typescript to check Typescript conventions in ESBuild, so add it.
+ESLint中でTypescriptの規約チェックをするため、追加しておく。
 
 1. `yarn add -D typescript`
 
@@ -240,14 +242,14 @@ We want to use Typescript to check Typescript conventions in ESBuild, so add it.
     import './project';
     ```
 
-## Setup ESLint
+## ESLint設定
 
 ```shell
 yarn add -D eslint esbuild-plugin-eslinter
 yarn eslint --init
 ```
 
-Adjust [`.eslintrc.json`](./.eslintrc.json) as following
+出来上がった[`.eslintrc.json`](./.eslintrc.json)ファイルを調整
 
 ```json
 {
@@ -283,21 +285,21 @@ Adjust [`.eslintrc.json`](./.eslintrc.json) as following
 }
 ```
 
-Add following helper script to [`package.json`](./package.json).
+eslintスクリプトを、[`package.json`](./package.json)に追加
 
 ```json
 "eslint": "eslint --ext .ts,.js ./app/javascript",
 "eslint:fix": "eslint --fix --ext .ts,.js ./app/javascript"
 ```
 
-Then we can use following command to check and fix Javascript code.
+これで、下記のコマンドは使えるようになる
 
 - `yarn eslint`
 - `yarn eslint:fix`
 
-## Setup StyleLint
+## StyleLintの設定
 
-1. Add plugins
+1. プラグインの追加
 
     ```shell
     yarn add -D stylelint stylelint-config-standard \
@@ -309,7 +311,7 @@ Then we can use following command to check and fix Javascript code.
     stylelint-config-property-sort-order-smacss
     ```
 
-1. Touch [`.stylelintrc.json`](./.stylelintrc.json)
+1. touch [`.stylelintrc.json`](./.stylelintrc.json)
 
     ```json
     {
@@ -325,21 +327,16 @@ Then we can use following command to check and fix Javascript code.
     }
     ```
 
-1. Add following helper script to [`package.json`](./package.json)
+1. ヘルパースクリプトを[`package.json`](./package.json)に追加
 
     ```json
     "stylelint": "stylelint 'app/assets/stylesheets/**/*.{css,scss}'",
     "stylelint:fix": "stylelint --fix 'app/assets/stylesheets/**/*.{css,scss}'"
     ```
 
-Then we can use following command to check css code and fix them.
+## esbuild設定の切り出し
 
-- `yarn stylelint`
-- `yarn stylelint:fix`
-
-## Create a separate ESBuild config file
-
-1. We may adjust the ESBuild configuration in the future, so create a separate [`esbuild.config.js`](./esbuild.config.js).
+1. 今後esubildの設定は調整するかもしれませんので、[`esbuild.config.js`](./esbuild.config.js)ファイルを作成していく
 
     ```javascript
     #!/usr/bin/env node
@@ -359,25 +356,25 @@ Then we can use following command to check css code and fix them.
     }).catch(() => process.exit(1));
     ```
 
-2. Adjust `package.json` as following
+1. `package.json` ファイルを調整
 
     ```json
     "build:js": "node esbuild.config.js",
     ```
 
-## Add Hot module reload feature
+## Hot module reload機能の追加
 
-We will use a file change monitor plugin `chokidar` to do that.
+`chokidar`を用いて構築する
 
-1. Install `chokidar`
+1. `chokidar`のインストール
 
     `yarn add -D chokidar`
 
-1. Create an ESBuild file for local development
+1. ローカル用のesbuildファイルの作成
 
     `touch ./esbuild-dev.config.js`
 
-    You can also find this full file [here](./esbuild-dev.config.js)
+    You can also find this file [here](./esbuild-dev.config.js)
 
     ```javascript
     #!/usr/bin/env node
@@ -448,13 +445,13 @@ We will use a file change monitor plugin `chokidar` to do that.
     }
     ```
 
-1. Add build script to [`package.json`](./package.json)
+1. ローカルビルド用のヘルパースクリプトを[`package.json`](./package.json)に追加
 
     ```json
     "build:js:dev": "node esbuild-dev.config.js",
     ```
 
-1. Adjust Foreman configuration file ([`./Procfile.dev`](./Procfile.dev))
+1. Foreman設定ファイル([`./Procfile.dev`](./Procfile.dev))を調整
 
     ```plaintext
     web: bin/rails server -p 3000
@@ -465,26 +462,26 @@ We will use a file change monitor plugin `chokidar` to do that.
 
 ## DONE
 
-The Rails 7 with ESBuild development environment construction is complete.
-Just run `bin/dev` and you are ready to develop.
-When there is any file changed, the screen will be automatically reloaded.
+これで構築は完了。
+`bin/dev`を起動すれば、開発できるようになります。
+ファイル変更があったとき、画面のリロードも自動的に行われる。
 
-## What to do when you are developing
+## 開発の際
 
-- Run `bin/dev`
-- Don't forget to update the manifest when adding or removing Stimulus controllers
+- `bin/dev`起動
+- Stimulusコントローラー追加や削除の際に、マニフェストの更新を忘れず
   - `bin/rails stimulus:manifest:update`
-- Add import code to `index.js` or `index.scss` in the folder as appropriate when adding js/css files
+- js/cssファイル追加の際に、適宜にフォルダにある `index.js`や`index.scss`にインポート文を追加
 
 ## Will Do
 
-- introduce a plugin that can import all JS files in a folder automatically
-- introduce a plugin that can import CSS files in a folder automatically
-- introduce a plugin that can import Stimulus controllers automatically
+- フォルダ中のJSフィアルをまとめてインポートできるプラグインを導入
+- フォルダ中のCSSフィアルをまとめてインポートできるプラグインを導入
+- Stimulus controllerをまとめてインポートできるプラグインを導入
 
 ## Will NOT Do
 
-- Not introduce a mechanism like Webpack that stops the application from working when a CSS/JS compile error occurs
-  - Lint file is set up so that the editor will display warnings
-  - CI checks for conventions.
-  - It interferes with development
+- Webpackのような、CSS/JSコンパイルエラーが発生したときのアプリケーションが動かなくなる仕組みを導入しない
+  - Lintファイル設定したため、エディターが警告を表示してくれる
+  - CIで規約チェックしている
+  - 開発に邪魔になる

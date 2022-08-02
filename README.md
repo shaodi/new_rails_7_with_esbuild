@@ -411,7 +411,17 @@ We will use a file change monitor plugin `chokidar` to do that.
       incremental: true,
       absWorkingDir: path.join(process.cwd(), 'app/javascript'),
       banner: { js: bannerJs },
-      watch: true,
+      color: true,
+      watch: {
+        onRebuild(error, result) {
+          if (error) {
+            // TODO: write build failed message to client
+            // console.error('watch build failed:', error);
+          } else {
+            console.log('watch build succeeded:', result);
+          }
+        },
+      },
       // custom plugins will be inserted is this array
       plugins: [
         eslintPlugin({ persistLintIssues: true }),
@@ -437,7 +447,7 @@ We will use a file change monitor plugin `chokidar` to do that.
         chokidar.watch(watchedDirectories).on('all', (_event, changedFilePath) => {
           if (changedFilePath.includes('javascript')) {
             console.log(`rebuilding ${changedFilePath}`);
-            result.rebuild();
+            result.rebuild().catch(() => console.log('rebuild failed'));
           }
           clients.forEach((res) => res.write('data: update\n\n'));
           clients.length = 0;

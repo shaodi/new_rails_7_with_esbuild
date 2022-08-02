@@ -33,11 +33,12 @@ const config = {
   incremental: true,
   absWorkingDir: path.join(process.cwd(), 'app/javascript'),
   banner: { js: bannerJs },
+  color: true,
   watch: {
     onRebuild(error, result) {
       if (error) {
         // TODO: write build failed message to client
-        console.error('watch build failed:', error);
+        // console.error('watch build failed:', error);
       } else {
         console.log('watch build succeeded:', result);
       }
@@ -69,7 +70,7 @@ if (watch) {
       if (changedFilePath.includes('javascript')) {
         console.log(`rebuilding ${changedFilePath}`);
         // TODO: write build failed message to client
-        result.rebuild().catch((error) => console.error('rebuild failed:', error));
+        result.rebuild().catch(() => console.log('\u001b[31m✘\u001b[0m rebuild failed'));
       } else {
         reloadScreen();
       }

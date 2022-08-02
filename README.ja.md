@@ -408,7 +408,17 @@ eslintスクリプトを、[`package.json`](./package.json)に追加
       incremental: true,
       absWorkingDir: path.join(process.cwd(), 'app/javascript'),
       banner: { js: bannerJs },
-      watch: true,
+      color: true,
+      watch: {
+        onRebuild(error, result) {
+          if (error) {
+            // TODO: write build failed message to client
+            // console.error('watch build failed:', error);
+          } else {
+            console.log('watch build succeeded:', result);
+          }
+        },
+      },
       // custom plugins will be inserted is this array
       plugins: [
         eslintPlugin({ persistLintIssues: true }),
@@ -434,7 +444,7 @@ eslintスクリプトを、[`package.json`](./package.json)に追加
         chokidar.watch(watchedDirectories).on('all', (_event, changedFilePath) => {
           if (changedFilePath.includes('javascript')) {
             console.log(`rebuilding ${changedFilePath}`);
-            result.rebuild();
+            result.rebuild().catch(() => console.log('rebuild failed'));
           }
           clients.forEach((res) => res.write('data: update\n\n'));
           clients.length = 0;
@@ -445,13 +455,13 @@ eslintスクリプトを、[`package.json`](./package.json)に追加
     }
     ```
 
-1. ローカルビルド用のヘルパースクリプトを[`package.json`](./package.json)に追加
+2. ローカルビルド用のヘルパースクリプトを[`package.json`](./package.json)に追加
 
     ```json
     "build:js:dev": "node esbuild-dev.config.js",
     ```
 
-1. Foreman設定ファイル([`./Procfile.dev`](./Procfile.dev))を調整
+3. Foreman設定ファイル([`./Procfile.dev`](./Procfile.dev))を調整
 
     ```plaintext
     web: bin/rails server -p 3000

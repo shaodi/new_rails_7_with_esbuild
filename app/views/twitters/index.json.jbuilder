@@ -1,1 +1,3 @@
-json.array! @twitters, partial: "twitters/twitter", as: :twitter
+# frozen_string_literal: true
+
+json.array! @twitters, partial: 'twitters/twitter', as: :twitter

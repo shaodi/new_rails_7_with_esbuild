@@ -14,7 +14,7 @@
   <div data-controller="word-count">
     <%= form.label :title, class: "form-label k-required" %>
     <%= form.text_field :title,
-        class: "form-control", maxlength: 40, autocomplete: 'off',
+        class: "form-control", maxlength: 100, autocomplete: 'off',
         data: { word_count_target: "input" } %>
     <span data-word-count-target="message" data-message-format="{count} words remain!"></span>
   </div>

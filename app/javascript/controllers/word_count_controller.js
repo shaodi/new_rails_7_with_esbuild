@@ -3,8 +3,8 @@ import { Controller } from '@hotwired/stimulus';
 export default class extends Controller {
   static targets = ['input', 'message'];
 
-  connect() {
-    this.inputTarget.addEventListener('keyup', this.count.bind(this));
+  inputTargetConnected(element) {
+    element.addEventListener('keyup', this.count.bind(this));
     this.count();
   }
 

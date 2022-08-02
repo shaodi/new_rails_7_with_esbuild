@@ -3,7 +3,10 @@ import { Controller } from '@hotwired/stimulus';
 export default class extends Controller {
   static targets = ['input', 'message'];
 
-  inputTargetConnected(element) {
+  declare readonly inputTarget: HTMLInputElement;
+  declare readonly messageTarget: HTMLInputElement;
+
+  inputTargetConnected(element: HTMLInputElement) {
     element.addEventListener('keyup', this.count.bind(this));
     this.count();
   }
@@ -16,9 +19,9 @@ export default class extends Controller {
       count = 0;
     }
 
-    this.messageTarget.textContent = this.messageTarget.dataset.messageFormat
-      .replace('{count}', count)
-      .replace('#{totalCount}', maxLength);
+    this.messageTarget.textContent = (this.messageTarget.dataset.messageFormat as string)
+      .replace('{count}', String(count))
+      .replace('#{totalCount}', String(maxLength));
   }
 }
 

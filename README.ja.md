@@ -390,15 +390,44 @@ eslintスクリプトを、[`package.json`](./package.json)に追加
 
     const clients = [];
     const watch = process.argv.includes('--watch');
+    const watchOptions = {
+      onRebuild(error, result) {
+        if (error) {
+          // TODO: write build failed message to client
+          // console.error('watch build failed:', error);
+        } else {
+          console.log('watch build succeeded:', result);
+          reloadScreen();
+        }
+      },
+    };
     const watchedDirectories = [
-      './app/javascript/**/*.ts',
-      './app/javascript/**/*.js',
+      // './app/javascript/**/*.ts',
+      // './app/javascript/**/*.js',
       './app/views/**/*.html.erb',
       './app/views/**/*.html.slim',
-      './app/assets/builds/*.css',
+      './app/assets/builds/**/*.css',
     ];
     const bannerJs = watch ?
       ' (() => new EventSource("http://localhost:8082").onmessage = () => location.reload())();' : '';
+    const reloadScreen = function() {
+      clients.forEach((res) => res.write('data: update\n\n'));
+      clients.length = 0;
+    };
+    const colorWord = function(words, color) {
+      const colorMap = {
+        black: '\u001b[30m',
+        red: '\u001b[31m',
+        green: '\u001b[32m',
+        yellow: '\u001b[33m',
+        blue: '\u001b[34m',
+        magenta: '\u001b[35m',
+        cyan: '\u001b[36m',
+        white: '\u001b[37m',
+      };
+      const reset = '\u001b[0m';
+      return `${colorMap[color]}${words}${reset}`;
+    };
 
     const config = {
       entryPoints: ['application.js'],
@@ -409,21 +438,21 @@ eslintスクリプトを、[`package.json`](./package.json)に追加
       absWorkingDir: path.join(process.cwd(), 'app/javascript'),
       banner: { js: bannerJs },
       color: true,
-      watch: {
-        onRebuild(error, result) {
-          if (error) {
-            // TODO: write build failed message to client
-            // console.error('watch build failed:', error);
-          } else {
-            console.log('watch build succeeded:', result);
-          }
-        },
-      },
+      watch: watch && watchOptions,
       // custom plugins will be inserted is this array
       plugins: [
         eslintPlugin({ persistLintIssues: true }),
       ],
     };
+
+    let catchHandler = undefined;
+    if (watch) {
+      catchHandler = () => console.log(`${colorWord('✘', 'red')} build failed`);
+    } else {
+      catchHandler = () => process.exit(1);
+    }
+
+    esbuild.build(config).catch(catchHandler);
 
     if (watch) {
       http
@@ -439,29 +468,20 @@ eslintスクリプトを、[`package.json`](./package.json)に追加
         })
         .listen(8082);
 
-      (async () => {
-        const result = await esbuild.build(config);
-        chokidar.watch(watchedDirectories).on('all', (_event, changedFilePath) => {
-          if (changedFilePath.includes('javascript')) {
-            console.log(`rebuilding ${changedFilePath}`);
-            result.rebuild().catch(() => console.log('rebuild failed'));
-          }
-          clients.forEach((res) => res.write('data: update\n\n'));
-          clients.length = 0;
-        });
-      })();
-    } else {
-      esbuild.build(config).catch(() => process.exit(1));
+      chokidar.watch(watchedDirectories).on('all', (_event, changedFilePath) => {
+        console.log(`${colorWord('⚡', 'green')} changed detected in file ${changedFilePath}`);
+        reloadScreen();
+      });
     }
     ```
 
-2. ローカルビルド用のヘルパースクリプトを[`package.json`](./package.json)に追加
+1. ローカルビルド用のヘルパースクリプトを[`package.json`](./package.json)に追加
 
     ```json
     "build:js:dev": "node esbuild-dev.config.js",
     ```
 
-3. Foreman設定ファイル([`./Procfile.dev`](./Procfile.dev))を調整
+1. Foreman設定ファイル([`./Procfile.dev`](./Procfile.dev))を調整
 
     ```plaintext
     web: bin/rails server -p 3000

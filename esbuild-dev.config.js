@@ -14,8 +14,8 @@ const watch = process.argv.includes('--watch');
 const watchOptions = {
   onRebuild(error, result) {
     if (error) {
-      // TODO: write build failed message to client
       // console.error('watch build failed:', error);
+      reloadScreen(inspectESBuildError(error));
     } else {
       console.log('watch build succeeded:', result);
       reloadScreen();
@@ -29,11 +29,41 @@ const watchedDirectories = [
   './app/views/**/*.html.slim',
   './app/assets/builds/**/*.css',
 ];
-const bannerJs = watch ?
-  ' (() => new EventSource("http://localhost:8082").onmessage = () => location.reload())();' : '';
-const reloadScreen = function() {
-  clients.forEach((res) => res.write('data: update\n\n'));
-  clients.length = 0;
+// (() => new EventSource("http://localhost:8082").onmessage = () => location.reload())();
+const onMessage = `
+(
+  // () => new EventSource("http://localhost:8082").onmessage = () => location.reload()
+  function() {
+    return new EventSource("http://localhost:8082").onmessage = function(e) {
+      if (e.data == 'update') {
+        location.reload();
+      }
+      else {
+        let div = document.createElement('div');
+        div.style.backgroundColor = 'black';
+        div.style.opacity = '.8';
+        div.style.color = 'white';
+        div.style.position = 'absolute';
+        div.style.left = '0';
+        div.style.top = '0';
+        div.style.width = '100%';
+        div.style.padding = '20px';
+        div.append(e.data);
+        document.body.appendChild(div);
+      }
+    };
+  }
+)();
+`;
+const inspectESBuildError = function(_error) {
+  // TODO: need to inspect error/warnings to client
+  return 'rebuild failed, please check console';
+};
+const bannerJs = watch ? onMessage : '';
+const reloadScreen = function(error) {
+  const data = (error ?? 'update');
+  clients.forEach((res) => res.write(`data: ${data}\n\n`));
+  if (data == 'update') clients.length = 0;
 };
 const colorWord = function(words, color) {
   const colorMap = {
@@ -73,7 +103,16 @@ if (watch) {
   catchHandler = () => process.exit(1);
 }
 
-esbuild.build(config).catch(catchHandler);
+esbuild
+  .build(config)
+  .then((_result) => {
+    if (watch) {
+      console.log(`${colorWord('👀', 'green')} Build finished, watching for changes...`);
+    } else {
+      console.log(`${colorWord('🍺', 'green')} Build finished, Congrats`);
+    }
+  })
+  .catch(catchHandler);
 
 if (watch) {
   http

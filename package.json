@@ -13,7 +13,7 @@
     "sass": "^1.53.0"
   },
   "scripts": {
-    "build:js": "node esbuild.config.js",
+    "build": "esbuild app/javascript/*.* --bundle --sourcemap --outdir=app/assets/builds --public-path=assets",
     "build:js:dev": "node esbuild-dev.config.js",
     "eslint": "eslint --ext .ts,.js ./app/javascript",
     "eslint:fix": "eslint --fix --ext .ts,.js ./app/javascript",
